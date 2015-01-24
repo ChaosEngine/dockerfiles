@@ -1,7 +1,7 @@
-#export MEMSQLKEY="12c197e246da4c5cbb23afccbb82cc28" \
-#
 FROM ubuntu:latest
 MAINTANER Chaos Engine "haos.engine@gmail.com"
+
+#ENV MEMSQLKEY=12c197e246da4c5cbb23afccbb82cc28
 
 RUN sudo apt-get -y update \
 	&& sudo apt-get -y install make gcc g++ build-essential libgssapi-krb5-2 libwrap0 mysql-client \
