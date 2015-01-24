@@ -7,7 +7,7 @@ RUN sudo apt-get -y update \
 	&& sudo apt-get -y install make gcc g++ build-essential libgssapi-krb5-2 libwrap0 mysql-client \
 	&& mkdir /opt/memsql
 
-ADD memsql /opt/memsql
+ADD binaries /opt/memsql
 
 RUN cd /opt/memsql \
 	&& dpkg -i memsql-3.2.x86_64.deb \

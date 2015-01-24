@@ -1,4 +1,2 @@
-memsql/memsql-3.2.x86_64.deb
-memsql/memsql-3.2.x86_64.rpm
-memsql/memsqlbin_amd64.tar.gz
+memsql/binaries/*
 memsql/memsql.txt
