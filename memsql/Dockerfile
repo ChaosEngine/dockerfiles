@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-MAINTANER Chaos Engine "haos.engine@gmail.com"
+MAINTANER Chaos Engine <haos.engine@gmail.com>
 
 #ENV MEMSQLKEY=12c197e246da4c5cbb23afccbb82cc28
 
