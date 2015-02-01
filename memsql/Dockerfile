@@ -1,17 +1,20 @@
-FROM ubuntu:latest
+FROM debian:latest
 MAINTANER Chaos Engine <haos.engine@gmail.com>
 
-#ENV MEMSQLKEY=12c197e246da4c5cbb23afccbb82cc28
+ENV MEMSQLKEY=cb7eec38ab4a44579a97d2668e92f5b5
 
-RUN sudo apt-get -y update \
-	&& sudo apt-get -y install make gcc g++ build-essential libgssapi-krb5-2 libwrap0 mysql-client \
-	&& mkdir /opt/memsql
+RUN apt-get -y update && apt-get -y install \
+	curl \
+	procps \
+	g++ \
+	libgssapi-krb5-2 \
+	mysql-client \
+	&& curl -SL "http://download.memsql.com/$MEMSQLKEY/memsql-3.2.x86_64.deb" -o memsql-3.2.x86_64.deb \
+	&& apt-get purge -y --auto-remove curl
 
-ADD binaries /opt/memsql
-
-RUN cd /opt/memsql \
-	&& dpkg -i memsql-3.2.x86_64.deb \
+RUN dpkg -i memsql-3.2.x86_64.deb \
 	&& chsh -s /bin/bash memsql
+RUN	rm -f memsql-3.2.x86_64.deb
 
 EXPOSE 3306
 
