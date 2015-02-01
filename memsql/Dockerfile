@@ -1,7 +1,7 @@
 FROM debian:latest
 MAINTANER Chaos Engine <haos.engine@gmail.com>
 
-ENV MEMSQLKEY=cb7eec38ab4a44579a97d2668e92f5b5
+ENV MEMSQLKEY cb7eec38ab4a44579a97d2668e92f5b5
 
 RUN apt-get -y update && apt-get -y install \
 	curl \
