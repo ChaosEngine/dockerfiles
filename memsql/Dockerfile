@@ -13,8 +13,7 @@ RUN apt-get -y update && apt-get -y install \
 	&& apt-get purge -y --auto-remove curl
 
 RUN dpkg -i memsql-3.2.x86_64.deb \
-	&& chsh -s /bin/bash memsql
-RUN	rm -f memsql-3.2.x86_64.deb
+	&& rm -f memsql-3.2.x86_64.deb
 
 EXPOSE 3306
 
