@@ -14,7 +14,7 @@ RUN apt-get -y update && apt-get -y install \
 	mysql-client \
 	&& wget -q "http://download.memsql.com/$MEMSQLKEY/memsql-3.2.x86_64.deb" \
 	&& apt-get purge -y --auto-remove wget \
-	dpkg -i memsql-3.2.x86_64.deb \
+	&& dpkg -i memsql-3.2.x86_64.deb \
 	&& rm -f memsql-3.2.x86_64.deb
 
 #using mysql listening port
