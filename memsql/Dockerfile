@@ -2,7 +2,7 @@ FROM debian:latest
 MAINTANER Chaos Engine <haos.engine@gmail.com>
 
 #custom trial (expiring!) key
-ENV MEMSQLKEY cb7eec38ab4a44579a97d2668e92f5b5
+ENV MEMSQLKEY a0c6e07b12994c088c25fd4c60401277
 
 #dependency include g++, mysql-client officially. Unofficialy it needs procps (coz of free) and libgssapi-krb5-2
 #install *.deb and if successfull, remove downloaded *.deb
