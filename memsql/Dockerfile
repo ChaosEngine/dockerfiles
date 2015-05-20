@@ -1,5 +1,5 @@
 FROM debian:latest
-MAINTANER Chaos Engine <haos.engine@gmail.com>
+MAINTAINER Chaos Engine <haos.engine@gmail.com>
 
 #custom trial (expiring!) key
 ENV MEMSQLKEY b3a3784779f1471baa60f6fd77101368
