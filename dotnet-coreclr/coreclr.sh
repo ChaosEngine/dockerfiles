@@ -14,7 +14,7 @@ apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3FA7E0328081BFF6A14DA29
 	&& echo "deb http://download.mono-project.com/repo/debian wheezy main" | tee /etc/apt/sources.list.d/mono-xamarin.list \
 	&& echo "deb http://jenkins.mono-project.com/repo/debian sid main" | sudo tee /etc/apt/sources.list.d/mono-jenkins.list \
 	&& apt-get update \
-	&& apt-get -y install mono-devel mono-snapshot-latest referenceassemblies-pcl libcurl4-openssl-dev libssl-dev
+	&& apt-get -y install mono-devel mono-snapshot-latest referenceassemblies-pcl libcurl4-openssl-dev libssl-dev libicu-dev
 
 mkdir -p ~/coreclr-demo/packages && mkdir -p ~/coreclr-demo/runtime && mkdir -p ~/git/ \
 	&& cd ~/coreclr-demo/packages && curl -L -O https://nuget.org/nuget.exe
