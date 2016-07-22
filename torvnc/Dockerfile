@@ -1,34 +1,39 @@
-# DOCKER-VERSION 0.5.3
+# DOCKER-VERSION 1.12.0-rc4
 # Tor Over VNC
 
 FROM ubuntu:14.04
 RUN apt-get update
-#RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
 # We need sudo because some post install stuff runs with tor
-RUN apt-get install -y python-software-properties software-properties-common python3-software-properties sudo wget
-RUN add-apt-repository -y ppa:upubuntu-com/tor && apt-get update
+RUN apt-get install -y sudo wget xz-utils
 
 # Get and extract Tor Browser bundle
-RUN wget "https://dist.torproject.org/torbrowser/5.5a3/tor-browser-linux64-5.5a3_pl.tar.xz"
-RUN tar xvf tor-browser-linux64-5.5a3_pl.tar.xz
-# The start script will exit if you're running as root - kill that (this is nasty and should be one sed not 4)
-#RUN cd tor-browser_pl && sed -i '114 s/^/#/' start-tor-browser && sed -i '115 s/^/#/' start-tor-browser && sed -i '116 s/^/#/' start-tor-browser && sed -i '117 s/^/#/' start-tor-browser
+RUN wget -q "https://dist.torproject.org/torbrowser/6.5a1/tor-browser-linux64-6.5a1_en-US.tar.xz" && \
+	tar xf tor-browser-linux64-6.5a1_en-US.tar.xz
 
 # Install vnc, xvfb in order to create a 'fake' display and firefox, tor-browser packages (get deps)
-RUN apt-get install -y x11vnc xvfb firefox
+RUN apt-get install -y x11vnc xvfb twm && \
+	apt-get install -y $(apt-cache depends firefox | grep Depends | sed "s/.*ends:\ //" | tr '\n' ' ')
+
+####user section####
+RUN export uid=1001 gid=1001 && \
+	mkdir -p /home/developer && \
+	echo "developer:x:${uid}:${gid}:Developer,,,:/home/developer:/bin/bash" >> /etc/passwd && \
+	echo "developer:x:${uid}:" >> /etc/group && \
+	echo "developer ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/developer && \
+	chmod 0440 /etc/sudoers.d/developer && \
+	chown ${uid}:${gid} -R /home/developer tor-browser_en-US
+
+USER developer
+ENV HOME /home/developer
+###/user section####
 
 # Setup a VNC password
-RUN mkdir ~/.vnc
-RUN x11vnc -storepasswd somekindavncpassw0rd ~/.vnc/passwd
+RUN mkdir ~/.vnc && \
+	x11vnc -storepasswd somekindavncpassw0rd ~/.vnc/passwd
 # Nasty way to start Tor
-RUN bash -c 'echo "tor-browser_en-US/start-tor-browser" >> /.bashrc'
+RUN bash -c 'echo -e "twm &\ncd tor-browser_en-US\n./start-tor-browser.desktop" >> ~/.bashrc'
 
 # VNC
 EXPOSE 5900
-# Internets!
-EXPOSE 80
-EXPOSE 443
-# Tor Proxy
-EXPOSE 9050
 
-CMD    ["x11vnc", "-forever", "-usepw", "-create"]
+CMD ["x11vnc", "-forever", "-usepw", "-create"]
