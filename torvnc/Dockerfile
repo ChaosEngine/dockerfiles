@@ -4,11 +4,13 @@
 FROM ubuntu:14.04
 RUN apt-get update
 # We need sudo because some post install stuff runs with tor
-RUN apt-get install -y sudo wget xz-utils
+RUN apt-get install -y sudo wget xz-utils gnupg
 
 # Get and extract Tor Browser bundle
-RUN wget -q "https://dist.torproject.org/torbrowser/6.5a1/tor-browser-linux64-6.5a1_en-US.tar.xz" && \
-	tar xf tor-browser-linux64-6.5a1_en-US.tar.xz
+RUN wget -q "https://dist.torproject.org/torbrowser/6.5a2/tor-browser-linux64-6.5a2_en-US.tar.xz" "https://dist.torproject.org/torbrowser/6.5a2/tor-browser-linux64-6.5a2_en-US.tar.xz.asc" && \
+	gpg --keyserver pool.sks-keyservers.net --recv-keys 0x4E2C6E8793298290 && \
+	gpg --verify tor-browser-linux64-6.5a2_en-US.tar.xz.asc tor-browser-linux64-6.5a2_en-US.tar.xz && \
+	tar xf tor-browser-linux64-6.5a2_en-US.tar.xz
 
 # Install vnc, xvfb in order to create a 'fake' display and firefox, tor-browser packages (get deps)
 RUN apt-get install -y x11vnc xvfb twm && \
