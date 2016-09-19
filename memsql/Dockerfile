@@ -1,7 +1,7 @@
 FROM debian:latest
 MAINTAINER Chaos Engine <haos.engine@gmail.com>
 
-ENV MEMSQL="memsql-ops-4.1.10"
+ENV MEMSQL="memsql-ops-5.1.0"
 
 #dependency include g++, mysql-client officially. Unofficialy it needs procps (coz of free) and libgssapi-krb5-2
 #install *.deb and if successfull, remove downloaded *.deb
@@ -13,9 +13,6 @@ RUN apt-get -y update && apt-get -y install \
 	mysql-client \
 	&& wget -q "http://download.memsql.com/${MEMSQL}/${MEMSQL}.tar.gz" \
 	&& apt-get purge -y --auto-remove wget \
-&& export MEMSQL="memsql-ops-4.1.10" \
-&& alias ll='ls -lah --color=auto' \
-&& apt-get install -y vim \
 	&& tar xf ${MEMSQL}.tar.gz \
 	&& cd "${MEMSQL}/memsql-ops" \
 	&& printf y\\n | ./memsql-ops agent-install \
@@ -31,4 +28,5 @@ RUN ls -l /var/lib/memsql/
 EXPOSE 3306
 EXPOSE 9000
 
-CMD /var/lib/memsql/service -u memsql start
+#CMD /var/lib/memsql/service -u memsql start
+CMD /var/lib/memsql-ops/memsql-ops start && /var/lib/memsql-ops/memsql-ops memsql-start --all && tail -f /var/lib/memsql/master-3306/tracelogs/memsql.log
