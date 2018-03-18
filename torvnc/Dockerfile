@@ -9,7 +9,7 @@ RUN apt-get update && \
 	apt-get install -y sudo wget xz-utils gnupg tightvncserver xterm fluxbox ca-certificates \
 	libasound2 libdbus-glib-1-2 libgtk2.0-0 libxrender1 libxt6
 
-ENV TOR_VERSION 7.5.1
+ENV TOR_VERSION 7.5.2
 ENV TOR_FINGERPRINT 0x4E2C6E8793298290
 
 #### Get and extract Tor Browser bundle with verification####
