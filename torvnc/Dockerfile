@@ -9,7 +9,7 @@ RUN apt-get update && \
 	apt-get install -y sudo wget xz-utils gnupg tightvncserver xterm fluxbox ca-certificates \
 	libasound2 libdbus-glib-1-2 libgtk-3-0 libxrender1 libxt6 procps
 
-ENV TOR_FINGERPRINT=0x4E2C6E8793298290 TOR_VERSION=8.0.6
+ENV TOR_FINGERPRINT=0x4E2C6E8793298290 TOR_VERSION=8.0.9
 
 #### Get and extract Tor Browser bundle with verification####
 RUN wget -q "https://dist.torproject.org/torbrowser/${TOR_VERSION}/tor-browser-linux64-${TOR_VERSION}_en-US.tar.xz" "https://dist.torproject.org/torbrowser/${TOR_VERSION}/tor-browser-linux64-${TOR_VERSION}_en-US.tar.xz.asc"
