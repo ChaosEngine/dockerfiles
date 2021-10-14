@@ -17,9 +17,9 @@ RUN unzip apex-latest.zip && unzip -d ords ords-latest.zip && unzip p32598392_21
 
 
 FROM openjdk:11.0-jre-slim-buster
-ENV ORDS_HOME="/srv/ords" USER=nobody
-COPY --from=build --chown="$USER":"$USER" /build/ords /build/start.sh $ORDS_HOME
-WORKDIR $ORDS_HOME
+ENV USER=nobody
+COPY --from=build --chown="$USER":"$USER" /build/ords /build/start.sh /srv/ords
+WORKDIR /srv/ords
 
 USER "$USER"
 EXPOSE 8080
