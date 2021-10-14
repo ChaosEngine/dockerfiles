@@ -7,13 +7,12 @@ WORKDIR /build
 #get all binaries and latest patch set
 ADD https://download.oracle.com/otn_software/apex/apex-latest.zip .
 ADD https://download.oracle.com/otn_software/java/ords/ords-latest.zip .
-ADD p32598392_2110_Generic.zip .
-ADD start.sh .
+COPY start.sh p*.zip* .
 
-#unpack
-RUN unzip apex-latest.zip && unzip -d ords ords-latest.zip && unzip p32598392_2110_Generic.zip && \
-	cp -r apex/images/ ords/ && cp -rf 32598392/images ords
-
+#unpack regular apex and ords zips
+RUN unzip apex-latest.zip && unzip -d ords ords-latest.zip && cp -r apex/images/ ords/
+#unpack and apply latest patch files
+RUN	unzip -d patch p*.zip && cp -rf patch/*/images ords || echo "patch non existing";
 
 
 FROM openjdk:11.0-jre-slim-buster
