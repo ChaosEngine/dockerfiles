@@ -9,26 +9,25 @@ trap gracefulshutdown SIGINT
 trap gracefulshutdown SIGTERM
 trap gracefulshutdown SIGKILL
 
-
 if [ "$INSTALL_APEX" == "true" ]; then
     echo "******************************************************************************"
     echo "Install APEX." `date`
     echo "******************************************************************************"
     pushd /srv/apex
 
-    /srv/sqlcl/bin/sql SYS/${SYS_PASSWORD}@//${DB_HOSTNAME}:${DB_PORT}/${DB_SERVICE} as sysdba <<EOF
+    /srv/sqlcl/bin/sql ${SYS_USER}/${SYS_PASSWORD}@//${DB_HOSTNAME}:${DB_PORT}/${DB_SERVICE} as sysdba <<EOF
 alter session set container = ${DB_SERVICE};
 @apexins.sql SYSAUX SYSAUX TEMP /i/
 
 BEGIN
     APEX_UTIL.set_security_group_id( 10 );
-    
+
     APEX_UTIL.create_user(
         p_user_name       => 'ADMIN',
         p_email_address   => 'admin@someemail.com',
         p_web_password    => '${APEX_PUBLIC_USER_PASSWORD}',
         p_developer_privs => 'ADMIN' );
-        
+
     APEX_UTIL.set_security_group_id( null );
     COMMIT;
 END;
@@ -68,7 +67,7 @@ user.apex.restpublic.password=${APEX_REST_PASSWORD}
 user.public.password=${PUBLIC_PASSWORD}
 user.tablespace.default=${TEMP_TABLESPACE}
 user.tablespace.temp=${TEMP_TABLESPACE}
-sys.user=SYS
+sys.user=${SYS_USER}
 sys.password=${SYS_PASSWORD}
 restEnabledSql.active=true
 feature.sdw=true
