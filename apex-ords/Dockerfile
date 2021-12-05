@@ -12,10 +12,10 @@ ADD https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip 
 COPY start.sh p*.zip* .
 
 #unpack regular apex and ords zips
-RUN unzip apex-latest.zip && unzip -d ords ords-latest.zip && cp -r apex/images/ ords/
+RUN unzip -q apex-latest.zip && unzip -q -d ords ords-latest.zip && cp -r apex/images/ ords/
 #unpack and apply latest patch files
-RUN	if [ "$DONT_INSTALL_PATCHSET" != "true" ] ; then unzip -d patch p*.zip && cp -rf patch/*/images ords || echo "patch non existing"; fi
-RUN if [ "$INSTALL_APEX" = "true" ] ; then unzip -d sqlcl sqlcl-latest.zip && rm -f sqlcl-latest.zip; fi
+RUN	if [ "$DONT_INSTALL_PATCHSET" != "true" ] ; then unzip -q -d patch p*.zip && cp -rf patch/*/images ords || echo "patch non existing"; fi
+RUN if [ "$INSTALL_APEX" = "true" ] ; then unzip -q -d sqlcl sqlcl-latest.zip && rm -f sqlcl-latest.zip; fi
 RUN if [ "$INSTALL_APEX" != "true" ] ; then rm -rf /build/sqlcl* /build/apex*; fi
 
 
