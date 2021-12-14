@@ -41,8 +41,23 @@ alter user APEX_REST_PUBLIC_USER identified by "${APEX_REST_PASSWORD}" account u
 
 exit;
 EOF
+		popd
+fi
+
+if [ "$DONT_INSTALL_PATCHSET" != "true" ] ; then
+	echo "******************************************************************************"
+	echo "Install PATCHSET." `date`
+	echo "******************************************************************************"
+	pushd /srv/patch/*
+
+    	/srv/sqlcl/bin/sql ${SYS_USER}/${SYS_PASSWORD}@//${DB_HOSTNAME}:${DB_PORT}/${DB_SERVICE} as sysdba <<EOF
+alter session set container = ${DB_SERVICE};
+@catpatch.sql
+exit;
+EOF
 	popd
 fi
+
 
 #standalone using built in jetty: https://docs.oracle.com/en/database/oracle/oracle-rest-data-services/19.1/aelig/installing-REST-data-services.html#GUID-3DB75A67-3E66-48EF-87AC-6948DE796588
 cat > params/ords_params.properties <<EOF
