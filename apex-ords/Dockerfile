@@ -7,13 +7,13 @@ ARG INSTALL_APEX
 WORKDIR /build
 
 #get all binaries and latest patch set
-ADD https://download.oracle.com/otn_software/apex/apex-latest.zip .
-ADD https://download.oracle.com/otn_software/java/ords/ords-latest.zip .
+ADD apex*.zip .
+ADD ords-*.zip .
 ADD https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip .
 COPY start.sh p*.zip* .
 
 #unpack regular apex and ords zips
-RUN unzip -q apex-latest.zip && unzip -q -d ords ords-latest.zip && cp -r apex/images/ ords/
+RUN unzip -q apex*.zip && unzip -q -d ords ords-*.zip && cp -r apex/images/ ords/
 #unpack and apply latest patch files
 RUN	if [ "$DONT_INSTALL_PATCHSET" != "true" ] ; then unzip -q -d patch p*.zip && cp -rf patch/*/images ords || echo "patch non existing"; \
 	else rm -rf /build/p* || echo "patch non existing"; fi
