@@ -4,11 +4,13 @@ LABEL maintainer="andrzej.pauli@gmail.com"
 
 ARG DONT_INSTALL_PATCHSET
 ARG INSTALL_APEX
+ARG APEX_ZIP
+ARG ORDS_ZIP
 WORKDIR /build
 
 #get all binaries and latest patch set
-ADD apex*.zip .
-ADD ords-*.zip .
+ADD "$APEX_ZIP" .
+ADD "$ORDS_ZIP" .
 ADD https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip .
 COPY start.sh p*.zip* .
 
