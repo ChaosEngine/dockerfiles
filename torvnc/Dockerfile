@@ -5,20 +5,19 @@ FROM debian:11
 #### Install vnc in order to create a 'fake' display and firefox, tor-browser packages (get deps) ####
 #### We need sudo because some post install stuff runs with tor ####
 RUN --mount=type=cache,target=/var/cache/apt apt-get update && \
-	apt-get install -y sudo wget xz-utils gnupg tightvncserver xterm fluxbox ca-certificates \
-	libasound2 libdbus-glib-1-2 libgtk-3-0 libxrender1 libxt6 procps && \
+	apt-get install --no-install-recommends -y sudo wget xz-utils gnupg tightvncserver xterm fluxbox ca-certificates \
+	libasound2 libdbus-glib-1-2 libgtk-3-0 libxrender1 libxt6 procps xfonts-base && \
 	rm -rf /var/lib/apt/lists/*
 
 #### env variables ####
-ENV TOR_FINGERPRINT=0x4E2C6E8793298290 TOR_VERSION=11.0.3
+ENV TOR_FINGERPRINT=0x4E2C6E8793298290 TOR_VERSION=11.0.4
 ENV USER=developer
 ENV HOME "/home/$USER"
 
 #### Create and prepare USER home directory with neccessary files ####
 RUN useradd --create-home --home-dir $HOME --shell /bin/bash $USER && \
 	mkdir $HOME/.vnc/
-COPY vnc.sh xstartup $HOME/.vnc/
-RUN chmod 760 $HOME/.vnc/vnc.sh $HOME/.vnc/xstartup
+COPY --chmod=760 vnc.sh xstartup $HOME/.vnc/
 
 #### Get and extract Tor Browser bundle with verification and create USER HOME path ####
 RUN wget -q "https://dist.torproject.org/torbrowser/${TOR_VERSION}/tor-browser-linux64-${TOR_VERSION}_en-US.tar.xz" "https://dist.torproject.org/torbrowser/${TOR_VERSION}/tor-browser-linux64-${TOR_VERSION}_en-US.tar.xz.asc" && \
@@ -37,7 +36,8 @@ USER "$USER"
 
 ####Setup a VNC password####
 RUN	echo vncpassw | vncpasswd -f > ~/.vnc/passwd && \
-	chmod 600 ~/.vnc/passwd
+	chmod 600 ~/.vnc/passwd && \
+	mkdir -p ~/.fluxbox && echo "background: unset" > ~/.fluxbox/overlay
 
 EXPOSE 5901
 

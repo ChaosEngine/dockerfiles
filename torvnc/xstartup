@@ -2,6 +2,7 @@ xhost + &
 xterm -geometry 80x24+0+0i &
 cd /tor-browser_en-US
 ./start-tor-browser.desktop &
+fbsetroot -solid grey45
 startfluxbox
 vncserver -kill :1
 pkill tail
