@@ -91,6 +91,27 @@ EOF
 
 java -jar ords.war configdir config
 
+
+if [ "$CONTEXT_PATH" != "" ] && [ "$CONTEXT_PATH" != "/ords" ] ; then
+	#fake start ords just to create config dir
+	java -jar -Xms256m -Xmx256m -server ords.war &
+	child_pid="$!"
+	sleep 7;
+	kill "$child_pid";
+
+	#fix standalone.context.path
+	cat > config/ords/standalone/standalone.properties <<EOF
+jetty.port=${HTTP_PORT}
+standalone.context.path=${CONTEXT_PATH}
+standalone.doc.root=/srv/ords/config/ords/standalone/doc_root
+standalone.scheme.do.not.prompt=true
+standalone.static.context.path=/i
+standalone.static.path=images
+EOF
+fi
+
+
+#start ords normally
 java -jar -Xms256m -Xmx256m -server ords.war &
 
 child_pid="$!"
