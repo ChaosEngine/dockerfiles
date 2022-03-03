@@ -93,6 +93,10 @@ java -jar ords.war configdir config
 
 
 if [ "$CONTEXT_PATH" != "" ] && [ "$CONTEXT_PATH" != "/ords" ] ; then
+	echo "******************************************************************************"
+	echo "Using CONTEXT_PATH=${CONTEXT_PATH}"
+	echo "******************************************************************************"
+
 	#fake start ords just to create config dir
 	java -jar -Xms256m -Xmx256m -server ords.war &
 	child_pid="$!"
