@@ -17,7 +17,7 @@ if [ "$INSTALL_APEX" == "true" ]; then
 
     /srv/sqlcl/bin/sql ${SYS_USER}/${SYS_PASSWORD}@//${DB_HOSTNAME}:${DB_PORT}/${DB_SERVICE} as sysdba <<EOF
 alter session set container = ${DB_SERVICE};
-@apexins.sql SYSAUX SYSAUX TEMP /i/
+@apexins.sql ${APEX_TABLESPACE} ${APEX_TABLESPACE} ${TEMP_TABLESPACE} /i/
 
 BEGIN
     APEX_UTIL.set_security_group_id( 10 );
