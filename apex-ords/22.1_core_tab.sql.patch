@@ -1,0 +1,13 @@
+--- core/tab.sql        2022-05-08 14:01:26.894854550 +0000
++++ core/tab.sql        2022-05-08 14:01:47.637864851 +0000
+@@ -16509,8 +16509,8 @@
+     )
+ lob (action_clob) store as (cache reads enable storage in row)
+ /
+-alter table wwv_flow_task_def_actions add constraint wwv_task_def_act_uk unique (task_def_id, name) using index compress 2
+-
++alter table wwv_flow_task_def_actions add constraint wwv_task_def_act_uk unique (task_def_id, name) using index compress
++/
+ alter table wwv_flow_task_def_actions add constraint wwv_task_def_act_ws_mod_ck
+     check ( web_src_module_id is null or web_src_operation_id is null )
+ /

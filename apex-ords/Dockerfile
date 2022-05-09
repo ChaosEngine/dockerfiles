@@ -12,10 +12,12 @@ WORKDIR /build
 ADD "$APEX_ZIP" .
 ADD "$ORDS_ZIP" .
 ADD https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip .
-COPY start.sh p*.zip* .
+COPY start.sh *.patch p*.zip* .
 
+#prerequisities
+RUN apt-get update && apt-get install -y patch
 #unpack regular apex and ords zips
-RUN unzip -q apex*.zip && unzip -q -d ords ords-*.zip && cp -r apex/images/ ords/
+RUN unzip -q apex*.zip && unzip -q -d ords ords-*.zip && cp -r apex/images/ ords/ && patch apex/core/tab.sql < "22.1_core_tab.sql.patch"
 #unpack and apply latest patch files
 RUN	if [ "$DONT_INSTALL_PATCHSET" != "true" ] ; then unzip -q -d patch p*.zip && cp -rf patch/*/images ords || echo "patch non existing"; \
 	else rm -rf /build/p* || echo "patch non existing"; fi
