@@ -66,7 +66,7 @@ ${PUBLIC_PASSWORD}
 EOF
 
 #start ords normally: https://docs.oracle.com/en/database/oracle/oracle-rest-data-services/22.1/ordig/deploying-and-monitoring-oracle-rest-data-services.html
-#APP_VM_OPTS="-Xms256m -Xmx256m"
+export _JAVA_OPTIONS="-Xms1024M -Xmx1024M"
 /srv/ords/bin/ords --verbose --config /srv/ords/./config serve --apex-images "images" --context-path "${CONTEXT_PATH}/ords" --apex-images-context-path "${CONTEXT_PATH}/i" &
 
 child_pid="$!"
