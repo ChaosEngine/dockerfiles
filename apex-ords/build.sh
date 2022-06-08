@@ -12,8 +12,8 @@ ORDS_ZIP="https://download.oracle.com/otn_software/java/ords/ords-latest.zip"
 
 DOCKER_BUILDKIT=1 $DOCKER build \
 	--progress=auto \
-	--build-arg DONT_INSTALL_PATCHSET="false" \
-	--build-arg INSTALL_APEX="false" \
+	--build-arg DONT_INSTALL_PATCHSET="true" \
+	--build-arg INSTALL_APEX="true" \
 	--build-arg APEX_ZIP="$APEX_ZIP" --build-arg ORDS_ZIP="$ORDS_ZIP" \
 	-f Dockerfile \
 	-t chaosengine/apex-ords .

@@ -12,7 +12,7 @@ WORKDIR /build
 ADD "$APEX_ZIP" .
 ADD "$ORDS_ZIP" .
 ADD https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip .
-COPY start.sh p*.zip* .
+COPY start.sh *.patch p*.zip* .
 
 #unpack regular apex and ords zips
 RUN unzip -q apex*.zip && unzip -q -d ords ords-*.zip && cp -r apex/images/ ords/

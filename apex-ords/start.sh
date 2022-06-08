@@ -59,64 +59,15 @@ EOF
 fi
 
 
-#standalone using built in jetty: https://docs.oracle.com/en/database/oracle/oracle-rest-data-services/19.1/aelig/installing-REST-data-services.html#GUID-3DB75A67-3E66-48EF-87AC-6948DE796588
-cat > params/ords_params.properties <<EOF
-db.hostname=${DB_HOSTNAME}
-db.port=${DB_PORT}
-db.servicename=${DB_SERVICE}
-#db.sid=
-db.username=APEX_PUBLIC_USER
-db.password=${APEX_PUBLIC_USER_PASSWORD}
-migrate.apex.rest=false
-plsql.gateway.add=true
-rest.services.apex.add=true
-rest.services.ords.add=true
-schema.tablespace.default=${APEX_TABLESPACE}
-schema.tablespace.temp=${TEMP_TABLESPACE}
-standalone.mode=true
-standalone.use.https=false
-standalone.http.port=${HTTP_PORT}
-standalone.static.images=images
-user.apex.listener.password=${APEX_LISTENER_PASSWORD}
-user.apex.restpublic.password=${APEX_REST_PASSWORD}
-user.public.password=${PUBLIC_PASSWORD}
-user.tablespace.default=${APEX_TABLESPACE}
-user.tablespace.temp=${TEMP_TABLESPACE}
-sys.user=${SYS_USER}
-sys.password=${SYS_PASSWORD}
-restEnabledSql.active=true
-feature.sdw=true
-database.api.enabled=true
+#standalone using built in jetty: https://docs.oracle.com/en/database/oracle/oracle-rest-data-services/22.1/ordig/installing-and-configuring-oracle-rest-data-services.html
+/srv/ords/bin/ords --config ./config install --admin-user "${SYS_USER}" --proxy-user --db-hostname "${DB_HOSTNAME}" --db-port "${DB_PORT}" --db-servicename "${DB_SERVICE}" --log-folder ./logs --feature-sdw true --password-stdin <<EOF
+${SYS_PASSWORD}
+${PUBLIC_PASSWORD}
 EOF
 
-java -jar ords.war configdir config
-
-
-if [ "$CONTEXT_PATH" != "" ] && [ "$CONTEXT_PATH" != "/ords" ] ; then
-	echo "******************************************************************************"
-	echo "Using CONTEXT_PATH=${CONTEXT_PATH}"
-	echo "******************************************************************************"
-
-	#fake start ords just to create config dir
-	java -jar -Xms256m -Xmx256m -server ords.war &
-	child_pid="$!"
-	sleep 7;
-	kill "$child_pid";
-
-	#fix standalone.context.path
-	cat > config/ords/standalone/standalone.properties <<EOF
-jetty.port=${HTTP_PORT}
-standalone.context.path=${CONTEXT_PATH}
-standalone.doc.root=/srv/ords/config/ords/standalone/doc_root
-standalone.scheme.do.not.prompt=true
-standalone.static.context.path=/i
-standalone.static.path=images
-EOF
-fi
-
-
-#start ords normally
-java -jar -Xms256m -Xmx256m -server ords.war &
+#start ords normally: https://docs.oracle.com/en/database/oracle/oracle-rest-data-services/22.1/ordig/deploying-and-monitoring-oracle-rest-data-services.html
+export _JAVA_OPTIONS="-Xms256M -Xmx256M"
+/srv/ords/bin/ords --verbose --config /srv/ords/./config serve --apex-images "images" --context-path "${CONTEXT_PATH}/ords" --apex-images-context-path "${CONTEXT_PATH}/i" &
 
 child_pid="$!"
 wait "${child_pid}"
