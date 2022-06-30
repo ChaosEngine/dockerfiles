@@ -1,5 +1,5 @@
 # syntax = docker/dockerfile:experimental
-FROM openjdk:jdk-buster AS build
+FROM openjdk:11.0-jdk-buster AS build
 LABEL maintainer="andrzej.pauli@gmail.com"
 
 ARG DONT_INSTALL_PATCHSET
