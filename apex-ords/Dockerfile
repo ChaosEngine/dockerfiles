@@ -6,6 +6,7 @@ ARG DONT_INSTALL_PATCHSET
 ARG INSTALL_APEX
 ARG APEX_ZIP
 ARG ORDS_ZIP
+ARG EXPAND_IMAGES
 WORKDIR /build
 
 #get all binaries and latest patch set
@@ -15,9 +16,10 @@ ADD https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip 
 COPY start.sh *.patch p*.zip* .
 
 #unpack regular apex and ords zips
-RUN unzip -q apex*.zip && unzip -q -d ords ords-*.zip && cp -r apex/images/ ords/
+RUN unzip -q -d ords ords-*.zip
+RUN if [ "$INSTALL_APEX" = "true" ] || [ "$EXPAND_IMAGES" = "true" ] ; then unzip -q apex*.zip && cp -r apex/images/ ords/; fi
 #unpack and apply latest patch files
-RUN	if [ "$DONT_INSTALL_PATCHSET" != "true" ] ; then unzip -q -d patch p*.zip && cp -rf patch/*/images ords || echo "patch non existing"; \
+RUN	if [ "$DONT_INSTALL_PATCHSET" != "true" ] ; then unzip -q -d patch p*.zip && [ "$EXPAND_IMAGES" != "true" ] || cp -rf patch/*/images ords || echo "patch non existing"; \
 	else rm -rf /build/p* || echo "patch non existing"; fi
 RUN if [ "$INSTALL_APEX" = "true" ] || [ "$DONT_INSTALL_PATCHSET" != "true" ] ; then unzip -q -d sqlcl sqlcl-latest.zip && rm -f sqlcl-latest.zip; \
 	else rm -rf /build/sqlcl*; fi
