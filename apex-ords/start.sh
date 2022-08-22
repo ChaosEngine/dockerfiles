@@ -60,14 +60,14 @@ fi
 
 
 #standalone using built in jetty: https://docs.oracle.com/en/database/oracle/oracle-rest-data-services/22.1/ordig/installing-and-configuring-oracle-rest-data-services.html
-/srv/ords/bin/ords --config ./config install --admin-user "${SYS_USER}" --proxy-user --db-hostname "${DB_HOSTNAME}" --db-port "${DB_PORT}" --db-servicename "${DB_SERVICE}" --log-folder ./logs --feature-sdw true --password-stdin <<EOF
+/srv/ords/bin/ords --config "${ORDS_CONFIG}" install --admin-user "${SYS_USER}" --proxy-user --db-hostname "${DB_HOSTNAME}" --db-port "${DB_PORT}" --db-servicename "${DB_SERVICE}" --log-folder "${ORDS_LOGS}" --feature-sdw true --password-stdin <<EOF
 ${SYS_PASSWORD}
 ${PUBLIC_PASSWORD}
 EOF
 
 #start ords normally: https://docs.oracle.com/en/database/oracle/oracle-rest-data-services/22.1/ordig/deploying-and-monitoring-oracle-rest-data-services.html
 export _JAVA_OPTIONS="-Xms384M -Xmx384M"
-/srv/ords/bin/ords --verbose --config /srv/ords/./config serve --apex-images "images" --context-path "${CONTEXT_PATH}/ords" --apex-images-context-path "${CONTEXT_PATH}/i" &
+/srv/ords/bin/ords --verbose --config "${ORDS_CONFIG}" serve --apex-images "images" --context-path "${CONTEXT_PATH}/ords" --apex-images-context-path "${CONTEXT_PATH}/i" &
 
 child_pid="$!"
 wait "${child_pid}"

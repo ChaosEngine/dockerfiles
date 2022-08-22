@@ -35,7 +35,7 @@ RUN if [ "$INSTALL_APEX" = "true" ] ; then apt-get update && apt-get install -y 
 RUN mkdir -p /nonexistent && chown nobody:nogroup /nonexistent;
 
 ENV INSTALL_APEX=${INSTALL_APEX:-false} DONT_INSTALL_PATCHSET=${DONT_INSTALL_PATCHSET:-false}
-ENV USER=nobody
+ENV USER=nobody ORDS_CONFIG="/nonexistent/config" ORDS_LOGS="/nonexistent/logs"
 
 COPY --from=build --chown="$USER":"$USER" /build/ords /build/start.sh /srv/ords
 COPY --from=build --chown="$USER":"$USER" /build/apex* /srv/apex
