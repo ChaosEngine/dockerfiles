@@ -49,12 +49,19 @@ END;
 
 @apex_rest_config.sql "${APEX_LISTENER_PASSWORD}" "${APEX_REST_PASSWORD}"
 
-alter user APEX_PUBLIC_USER identified by "${PUBLIC_PASSWORD}" account lock;
-alter user APEX_REST_PUBLIC_USER identified by "${APEX_REST_PASSWORD}" account lock;
+alter user APEX_PUBLIC_USER identified by "${PUBLIC_PASSWORD}" account unlock;
+alter user APEX_REST_PUBLIC_USER identified by "${APEX_REST_PASSWORD}" account unlock;
 
 exit;
 EOF
-		popd
+	#standalone using built in jetty: https://docs.oracle.com/en/database/oracle/oracle-rest-data-services/22.1/ordig/installing-and-configuring-oracle-rest-data-services.html
+	#probably not needed, conflicts with below config settings one-by-one, also requires that ORDS_PUBLIC_USER is used and APEX_PUBLIC_USER is unlocked and log into it. Why? who knows!
+	$ORDS_BIN --config "${ORDS_CONFIG}" install --admin-user "${SYS_USER}" --proxy-user --db-hostname "${DB_HOSTNAME}" --db-port "${DB_PORT}" --db-servicename "${DB_SERVICE}" --log-folder "${ORDS_LOGS}" --feature-sdw true --password-stdin <<EOF
+${SYS_PASSWORD}
+${PUBLIC_PASSWORD}
+EOF
+
+	popd
 fi
 
 if [ "$DONT_INSTALL_PATCHSET" != "true" ] ; then
@@ -68,13 +75,6 @@ alter session set container = ${DB_SERVICE};
 @catpatch.sql
 exit;
 EOF
-
-	#standalone using built in jetty: https://docs.oracle.com/en/database/oracle/oracle-rest-data-services/22.1/ordig/installing-and-configuring-oracle-rest-data-services.html
-	#probably not needed, conflicts with below config settings one-by-one, also requires that ORDS_PUBLIC_USER is used and APEX_PUBLIC_USER is unlocked and log into it. Why? who knows!
-#	$ORDS_BIN --config "${ORDS_CONFIG}" install --admin-user "${SYS_USER}" --proxy-user --db-hostname "${DB_HOSTNAME}" --db-port "${DB_PORT}" --db-servicename "${DB_SERVICE}" --log-folder "${ORDS_LOGS}" --feature-sdw true --password-stdin <<EOF
-#${SYS_PASSWORD}
-#${PUBLIC_PASSWORD}
-#EOF
 
 	popd
 fi
