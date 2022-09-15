@@ -1,5 +1,5 @@
 # syntax = docker/dockerfile:experimental
-FROM openjdk:11.0-jdk-buster AS build
+FROM eclipse-temurin:11-jdk AS build
 LABEL maintainer="andrzej.pauli@gmail.com"
 #flags for build stage with default values
 ARG DONT_INSTALL_PATCHSET=true
@@ -17,6 +17,8 @@ ADD "$ORDS_ZIP" .
 ADD "$SQLCL_ZIP" .
 COPY start.sh *.patch p*.zip* .
 
+#prerequisities
+RUN apt-get update && apt-get install -y unzip;
 #unpack regular ords zips
 RUN unzip -q -d ords ords-*.zip
 #depending on flags unpack apex, images
@@ -31,7 +33,7 @@ RUN if [ "$INSTALL_APEX" = "true" ] || [ "$DONT_INSTALL_PATCHSET" != "true" ] ; 
 RUN if [ "$INSTALL_APEX" != "true" ] ; then rm -rf /build/apex*; fi
 
 
-FROM openjdk:11.0-jre-slim-buster
+FROM eclipse-temurin:11-jre
 #flags for run stage with default values
 ARG INSTALL_APEX=false
 ARG DONT_INSTALL_PATCHSET=true
