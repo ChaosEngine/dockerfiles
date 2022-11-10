@@ -100,7 +100,7 @@ fi
 
 #start ords normally: https://docs.oracle.com/en/database/oracle/oracle-rest-data-services/22.1/ordig/deploying-and-monitoring-oracle-rest-data-services.html
 #but with memory limitation
-export _JAVA_OPTIONS="-Xms384M -Xmx384M"
+#export _JAVA_OPTIONS="-Xms384M -Xmx384M"
 #passs in images and context variables
 $ORDS_BIN --verbose --config "${ORDS_CONFIG}" serve --apex-images "images" --context-path "${CONTEXT_PATH}/ords" --apex-images-context-path "${CONTEXT_PATH}/i" &
 

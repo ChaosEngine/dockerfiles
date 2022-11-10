@@ -1,5 +1,5 @@
 # syntax = docker/dockerfile:experimental
-FROM eclipse-temurin:11-jdk AS build
+FROM eclipse-temurin:17-jdk AS build
 LABEL maintainer="andrzej.pauli@gmail.com"
 #flags for build stage with default values
 ARG DONT_INSTALL_PATCHSET=true
@@ -33,7 +33,7 @@ RUN if [ "$INSTALL_APEX" = "true" ] || [ "$DONT_INSTALL_PATCHSET" != "true" ] ; 
 RUN if [ "$INSTALL_APEX" != "true" ] ; then rm -rf /build/apex*; fi
 
 
-FROM eclipse-temurin:11-jre
+FROM eclipse-temurin:17-jre
 #flags for run stage with default values
 ARG INSTALL_APEX=false
 ARG DONT_INSTALL_PATCHSET=true

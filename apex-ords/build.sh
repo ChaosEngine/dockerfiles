@@ -11,7 +11,7 @@ ORDS_ZIP="https://download.oracle.com/otn_software/java/ords/ords-latest.zip"
 #ORDS_ZIP="ords-*.zip"
 
 DONT_INSTALL_PATCHSET="false"
-INSTALL_APEX="false"
+INSTALL_APEX="true"
 EXPAND_IMAGES="true"
 
 DOCKER_BUILDKIT=1 $DOCKER build \
