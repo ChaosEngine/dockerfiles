@@ -8,3 +8,4 @@ How to run:
 `docker run -it -p 5901:5901 chaosengine/torbrowser-vnc:latest`
 
 then connect to :1 display with vncviewer
+password: vncpassword
