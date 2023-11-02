@@ -62,6 +62,14 @@ ${PUBLIC_PASSWORD}
 EOF
 
 	popd
+
+	pushd /srv/apex/utilities/
+ 	echo "******************************************************************************"
+	echo "Resetting image prefix." `date`
+	echo "******************************************************************************"
+	/srv/sqlcl/bin/sql ${SYS_USER}/${SYS_PASSWORD}@//${DB_HOSTNAME}:${DB_PORT}/${DB_SERVICE} as sysdba @reset_image_prefix_core.sql "${CONTEXT_PATH}/i/"
+	popd
+
 fi
 
 if [ "$DONT_INSTALL_PATCHSET" != "true" ] ; then
@@ -87,7 +95,11 @@ $ORDS_BIN config set db.servicename "${DB_SERVICE}"
 $ORDS_BIN config set feature.sdw true
 $ORDS_BIN config set restEnabledSql.active true
 $ORDS_BIN config set database.api.enabled true
+$ORDS_BIN config set --global instance.api.enabled true
 $ORDS_BIN config set db.username "${PUBLIC_USER}"
+$ORDS_BIN config set debug.printDebugToScreen true
+$ORDS_BIN config set cache.metadata.enabled true
+$ORDS_BIN config set cache.metadata.timeout 60s
 $ORDS_BIN config secret --password-stdin db.password <<EOF
 ${PUBLIC_PASSWORD}
 EOF

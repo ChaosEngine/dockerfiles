@@ -1,5 +1,5 @@
 # syntax = docker/dockerfile:experimental
-FROM eclipse-temurin:17-jdk AS build
+FROM eclipse-temurin:17-jdk-alpine AS build
 LABEL maintainer="andrzej.pauli@gmail.com"
 #flags for build stage with default values
 ARG DONT_INSTALL_PATCHSET=true
@@ -18,7 +18,7 @@ ADD "$SQLCL_ZIP" .
 COPY start.sh *.patch p*.zip* .
 
 #prerequisities
-RUN apt-get update && apt-get install -y unzip;
+RUN apk add unzip;
 #unpack regular ords zips
 RUN unzip -q -d ords ords-*.zip
 #depending on flags unpack apex, images
