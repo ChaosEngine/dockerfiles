@@ -31,6 +31,10 @@ RUN if [ "$INSTALL_APEX" = "true" ] || [ "$DONT_INSTALL_PATCHSET" != "true" ] ; 
 	else rm -rf /build/sqlcl*; fi
 #cleanup
 RUN if [ "$INSTALL_APEX" != "true" ] ; then rm -rf /build/apex*; fi
+RUN rm -rf /build/apex-latest.zip /build/apex/images /build/patch/*/images
+
+
+
 
 
 FROM eclipse-temurin:17-jre
