@@ -4,6 +4,23 @@ function gracefulshutdown {
 	echo "Caught SIGTERM signal!"
 	kill -TERM "$child_pid" 2>/dev/null
 }
+#param $1 - option key
+#param $2 - option value
+function setOrdsGlobalOption {
+	local file="$ORDS_CONFIG/global/settings.xml"
+	grep -i "$1" $file && return;
+
+	sed -i '/<\/properties>/i\'"<entry key=\"$1\">$2</entry>" $file
+}
+#param $1 - option key
+#param $2 - option value
+#param $3 - DB pool name
+function setOrdsPoolOption {
+	local file="$ORDS_CONFIG/databases/${3:-default}/pool.xml"
+	grep -i "$1" $file && return;
+
+	sed -i '/<\/properties>/i\'"<entry key=\"$1\">$2</entry>" $file
+}
 
 trap gracefulshutdown SIGINT
 trap gracefulshutdown SIGTERM
@@ -54,6 +71,10 @@ alter user APEX_REST_PUBLIC_USER identified by "${APEX_REST_PASSWORD}" account u
 
 exit;
 EOF
+
+    echo "******************************************************************************"
+    echo "Install ORDS." `date`
+    echo "******************************************************************************"
 	#standalone using built in jetty: https://docs.oracle.com/en/database/oracle/oracle-rest-data-services/22.1/ordig/installing-and-configuring-oracle-rest-data-services.html
 	#probably not needed, conflicts with below config settings one-by-one, also requires that ORDS_PUBLIC_USER is used and APEX_PUBLIC_USER is unlocked and log into it. Why? who knows!
 	$ORDS_BIN --config "${ORDS_CONFIG}" install --admin-user "${SYS_USER}" --proxy-user --db-hostname "${DB_HOSTNAME}" --db-port "${DB_PORT}" --db-servicename "${DB_SERVICE}" --log-folder "${ORDS_LOGS}" --feature-sdw true --password-stdin <<EOF
@@ -62,6 +83,23 @@ ${PUBLIC_PASSWORD}
 EOF
 
 	popd
+
+	pushd /srv/apex/utilities/
+ 	echo "******************************************************************************"
+	echo "Resetting image prefix." `date`
+	echo "******************************************************************************"
+	/srv/sqlcl/bin/sql ${SYS_USER}/${SYS_PASSWORD}@//${DB_HOSTNAME}:${DB_PORT}/${DB_SERVICE} as sysdba @reset_image_prefix_core.sql "${CONTEXT_PATH}/i/"
+	popd
+
+else
+	#$ORDS_BIN config set db.hostname "${DB_HOSTNAME}"
+	setOrdsPoolOption db.hostname "${DB_HOSTNAME}"
+	#$ORDS_BIN config set db.port "${DB_PORT}"
+	setOrdsPoolOption db.port "${DB_PORT}"
+	#$ORDS_BIN config set db.servicename "${DB_SERVICE}"
+	setOrdsPoolOption db.servicename "${DB_SERVICE}"
+	#$ORDS_BIN config set feature.sdw true
+	setOrdsPoolOption feature.sdw true
 fi
 
 if [ "$DONT_INSTALL_PATCHSET" != "true" ] ; then
@@ -81,16 +119,25 @@ fi
 
 
 #setup config entries using "ords config set" option
-$ORDS_BIN config set db.hostname "${DB_HOSTNAME}"
-$ORDS_BIN config set db.port "${DB_PORT}"
-$ORDS_BIN config set db.servicename "${DB_SERVICE}"
-$ORDS_BIN config set feature.sdw true
-$ORDS_BIN config set restEnabledSql.active true
-$ORDS_BIN config set database.api.enabled true
-$ORDS_BIN config set db.username "${PUBLIC_USER}"
 $ORDS_BIN config secret --password-stdin db.password <<EOF
 ${PUBLIC_PASSWORD}
 EOF
+#$ORDS_BIN config set restEnabledSql.active true
+setOrdsPoolOption restEnabledSql.active true
+#$ORDS_BIN config set database.api.enabled true
+setOrdsGlobalOption database.api.enabled true
+#$ORDS_BIN config set --global instance.api.enabled true
+setOrdsGlobalOption instance.api.enabled true
+#$ORDS_BIN config set db.username "${PUBLIC_USER}"
+setOrdsPoolOption db.username "${PUBLIC_USER}"
+#$ORDS_BIN config set debug.printDebugToScreen true
+setOrdsGlobalOption debug.printDebugToScreen true
+#$ORDS_BIN config set cache.metadata.enabled true
+setOrdsGlobalOption cache.metadata.enabled true
+#$ORDS_BIN config set cache.metadata.timeout 60s
+setOrdsGlobalOption cache.metadata.timeout 60s
+
+
 #if wallet_datta exists make a file out of it and set entries in config
 if [ "$WALLET_DATA" != "" ]; then
 	$ORDS_BIN config set db.wallet.zip.service "${DB_SERVICE}"
@@ -102,7 +149,17 @@ fi
 #but with memory limitation
 #export _JAVA_OPTIONS="-Xms384M -Xmx384M"
 #passs in images and context variables
+echo "******************************************************************************"
+echo "Serving ORDS" `date`
+echo "******************************************************************************"
+
 $ORDS_BIN --verbose --config "${ORDS_CONFIG}" serve --apex-images "images" --context-path "${CONTEXT_PATH}/ords" --apex-images-context-path "${CONTEXT_PATH}/i" &
+#/opt/java/openjdk/bin/java -Doracle.dbtools.cmdline.home=/srv/ords -Duser.language=en -Duser.region=US -Dfile.encoding=UTF-8 -Djava.awt.headless=true -Dnashorn.args=--no-deprecation-warning -Doracle.dbtools.cmdline.ShellCommand=ords -Duser.timezone=UTC \
+#	-Xdebug -Xrunjdwp:transport=dt_socket,address=62911,server=y,suspend=n \
+#	-Dcom.sun.management.jmxremote= \
+#	-Dcom.sun.management.jmxremote.port=1898 -Dcom.sun.management.jmxremote.rmi.port=1898 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false \
+#	-Djava.rmi.server.hostname=192.168.0.2 \
+#	-jar /srv/ords/ords.war --verbose --config "${ORDS_CONFIG}" serve --apex-images images --context-path "${CONTEXT_PATH}/ords" --apex-images-context-path "${CONTEXT_PATH}/i" &
 
 child_pid="$!"
 wait "${child_pid}"
