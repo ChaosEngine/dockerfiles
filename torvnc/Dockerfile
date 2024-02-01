@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:experimental
 # Tor Over VNC
-FROM debian:bookworm-20231218
+FROM debian:bookworm-20240130
 
 #### Install vnc in order to create a 'fake' display and firefox, tor-browser packages (get deps) ####
 #### We need sudo because some post install stuff runs with tor ####
