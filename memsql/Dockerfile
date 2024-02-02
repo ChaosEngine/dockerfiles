@@ -1,4 +1,4 @@
-FROM debian:bookworm-20231218
+FROM debian:bookworm-20240130
 MAINTAINER Chaos Engine <haos.engine@gmail.com>
 
 ENV MEMSQL="memsql-ops-5.1.0"
