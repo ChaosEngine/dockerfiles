@@ -92,14 +92,14 @@ EOF
 	popd
 
 else
-	#$ORDS_BIN config set db.hostname "${DB_HOSTNAME}"
-	setOrdsPoolOption db.hostname "${DB_HOSTNAME}"
-	#$ORDS_BIN config set db.port "${DB_PORT}"
-	setOrdsPoolOption db.port "${DB_PORT}"
-	#$ORDS_BIN config set db.servicename "${DB_SERVICE}"
-	setOrdsPoolOption db.servicename "${DB_SERVICE}"
-	#$ORDS_BIN config set feature.sdw true
-	setOrdsPoolOption feature.sdw true
+	$ORDS_BIN config set db.hostname "${DB_HOSTNAME}"
+	#setOrdsPoolOption db.hostname "${DB_HOSTNAME}"
+	$ORDS_BIN config set db.port "${DB_PORT}"
+	#setOrdsPoolOption db.port "${DB_PORT}"
+	$ORDS_BIN config set db.servicename "${DB_SERVICE}"
+	#setOrdsPoolOption db.servicename "${DB_SERVICE}"
+	$ORDS_BIN config set feature.sdw true
+	#setOrdsPoolOption feature.sdw true
 fi
 
 if [ "$DONT_INSTALL_PATCHSET" != "true" ] ; then
