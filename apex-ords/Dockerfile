@@ -1,5 +1,5 @@
 # syntax = docker/dockerfile:experimental
-FROM eclipse-temurin:17-jdk-alpine AS build
+FROM eclipse-temurin:21-jdk-alpine AS build
 LABEL maintainer="andrzej.pauli@gmail.com"
 #flags for build stage with default values
 ARG DONT_INSTALL_PATCHSET=true
@@ -37,7 +37,7 @@ RUN rm -rf /build/apex-latest.zip /build/apex/images /build/patch/*/images
 
 
 
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:21-jre
 #flags for run stage with default values
 ARG INSTALL_APEX=false
 ARG DONT_INSTALL_PATCHSET=true
