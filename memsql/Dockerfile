@@ -1,4 +1,4 @@
-FROM debian:12.5
+FROM debian:12.6
 MAINTAINER Chaos Engine <haos.engine@gmail.com>
 
 ENV MEMSQL="memsql-ops-5.1.0"
