@@ -148,6 +148,14 @@ fi
 #start ords normally: https://docs.oracle.com/en/database/oracle/oracle-rest-data-services/22.1/ordig/deploying-and-monitoring-oracle-rest-data-services.html
 #but with memory limitation
 #export _JAVA_OPTIONS="-Xms384M -Xmx384M"
+export _JAVA_OPTIONS="-Djava.util.logging.config.file=${ORDS_CONFIG}/logging.properties"
+cat <<EOF >> "${ORDS_CONFIG}/logging.properties"
+handlers=java.util.logging.ConsoleHandler
+
+.level=WARNING
+
+java.util.logging.ConsoleHandler.level=WARNING
+EOF
 #passs in images and context variables
 echo "******************************************************************************"
 echo "Serving ORDS" `date`
