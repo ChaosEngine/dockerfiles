@@ -10,7 +10,7 @@ RUN --mount=type=cache,target=/var/cache/apt apt-get update && \
 	rm -rf /var/lib/apt/lists/*
 
 #### env variables ####
-ENV TOR_FINGERPRINT=0x4E2C6E8793298290 TOR_VERSION=14.0.6
+ENV TOR_FINGERPRINT=0x4E2C6E8793298290 TOR_VERSION=14.0.7
 ENV USER=developer
 ENV HOME "/home/$USER"
 
