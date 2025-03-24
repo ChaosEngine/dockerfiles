@@ -124,6 +124,7 @@ ${PUBLIC_PASSWORD}
 EOF
 #$ORDS_BIN config set restEnabledSql.active true
 setOrdsPoolOption restEnabledSql.active true
+setOrdsPoolOption jdbc.MaxLimit 25
 #$ORDS_BIN config set database.api.enabled true
 setOrdsGlobalOption database.api.enabled true
 #$ORDS_BIN config set --global instance.api.enabled true
@@ -135,7 +136,7 @@ setOrdsGlobalOption debug.printDebugToScreen true
 #$ORDS_BIN config set cache.metadata.enabled true
 setOrdsGlobalOption cache.metadata.enabled true
 #$ORDS_BIN config set cache.metadata.timeout 60s
-setOrdsGlobalOption cache.metadata.timeout 60s
+setOrdsGlobalOption cache.metadata.timeout 600s
 
 
 #if wallet_datta exists make a file out of it and set entries in config
