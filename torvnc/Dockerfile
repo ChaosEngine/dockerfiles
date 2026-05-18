@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:experimental
 # Tor Over VNC
-FROM debian:13.4-slim
+FROM debian:stable-slim
 
 #### Install vnc in order to create a 'fake' display and firefox, tor-browser packages (get deps) ####
 #### We need sudo because some post install stuff runs with tor ####
@@ -10,7 +10,7 @@ RUN --mount=type=cache,target=/var/cache/apt apt-get update && \
 	rm -rf /var/lib/apt/lists/*
 
 #### env variables ####
-ENV TOR_FINGERPRINT=0x4E2C6E8793298290 TOR_VERSION=15.0.9
+ENV TOR_FINGERPRINT=0x4E2C6E8793298290 TOR_VERSION=15.0.13
 ENV USER=developer
 ENV HOME "/home/$USER"
 
